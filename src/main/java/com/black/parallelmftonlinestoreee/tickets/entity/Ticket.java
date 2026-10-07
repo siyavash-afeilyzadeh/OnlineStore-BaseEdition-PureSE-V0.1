@@ -190,7 +190,11 @@ public class Ticket implements Serializable {
 
     public void onCreate() {
         this.createdAt = LocalDateTime.now();
-        this.updatedAt = this.createdAt;
+        this.updatedAt = LocalDateTime.now();
+        this.deleted = false;
+        if (this.version == null) {
+            this.version = 0L;
+        }
         if (this.status == null) {
             this.status = TicketStatus.OPEN;
         }
@@ -198,6 +202,11 @@ public class Ticket implements Serializable {
 
     public void onUpdate() {
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public void onDeleted(){
+        this.deleted = true;
+        this.deletedAt = LocalDateTime.now();
     }
 
     // ==================== Equals & HashCode ====================
