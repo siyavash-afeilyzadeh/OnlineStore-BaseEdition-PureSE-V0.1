@@ -1,7 +1,6 @@
 package com.black.onlinestorese.attachments.entity;
 
 import com.black.onlinestorese.attachments.entity.enums.AttachmentOwnerType;
-import com.black.onlinestorese.tickets.entity.Ticket;
 
 import java.io.Serial;
 import java.io.Serializable;
