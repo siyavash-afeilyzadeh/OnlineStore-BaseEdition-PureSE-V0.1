@@ -20,7 +20,7 @@ Implementing a scalable, clean-architecture e-commerce platform without framewor
 ---
 
 ## 📂 Project Structure & Packages
-The project is organized into isolated, domain-driven modules under `com.black.parallelmftonlinestoree`:
+The project is organized into isolated, domain-driven modules under `com.black.onlinestorese`:
 ```text
 com.black.parallelmftonlinestoree
 ├── 📁 attachments/    # File uploads and binary attachments handling
