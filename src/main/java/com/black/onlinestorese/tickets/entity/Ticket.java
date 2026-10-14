@@ -29,7 +29,6 @@ public class Ticket implements Serializable {
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -37,7 +36,6 @@ public class Ticket implements Serializable {
     public Long getVersion(){
         return version;
     }
-
     public void setVersion(Long version){
         this.version = version;
     }
@@ -45,7 +43,6 @@ public class Ticket implements Serializable {
     public boolean isDeleted() {
         return deleted;
     }
-
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
@@ -53,7 +50,6 @@ public class Ticket implements Serializable {
     public LocalDateTime getCreatedAt(){
         return createdAt;
     }
-
     public void setCreatedAt(LocalDateTime createdAt){
         this.createdAt = createdAt;
     }
@@ -61,7 +57,6 @@ public class Ticket implements Serializable {
     public LocalDateTime getUpdatedAt(){
         return updatedAt;
     }
-
     public void setUpdatedAt(LocalDateTime updatedAt){
         this.updatedAt = updatedAt;
     }
@@ -69,7 +64,6 @@ public class Ticket implements Serializable {
     public LocalDateTime getDeletedAt(){
         return deletedAt;
     }
-
     public void setDeletedAt(LocalDateTime deletedAt){
         this.deletedAt = deletedAt;
     }
@@ -77,7 +71,6 @@ public class Ticket implements Serializable {
     public String getSubject(){
         return subject;
     }
-
     public void setSubject(String subject){
         this.subject = subject;
     }
@@ -85,7 +78,6 @@ public class Ticket implements Serializable {
     public User getUser(){
         return user;
     }
-
     public void setUser(User user){
         this.user = user;
     }
@@ -93,15 +85,36 @@ public class Ticket implements Serializable {
     public TicketStatus getStatus() {
         return status;
     }
-
     public void setStatus(TicketStatus status) {
         this.status = status;
     }
 
-    // ==================== No-Arg Constructor ====================
+    // ==================== No-Arguments Constructor ====================
 
     public Ticket(){
 
+    }
+
+    // ==================== All-Arguments Constructor ====================
+
+    public Ticket(Long id,
+                  Long version,
+                  boolean deleted,
+                  LocalDateTime createdAt,
+                  LocalDateTime updatedAt,
+                  LocalDateTime deletedAt,
+                  String subject,
+                  User user,
+                  TicketStatus status) {
+        this.id = id;
+        this.version = version;
+        this.deleted = deleted;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.deletedAt = deletedAt;
+        this.subject = subject;
+        this.user = user;
+        this.status = status;
     }
 
     // ==================== Builder ====================
@@ -116,10 +129,6 @@ public class Ticket implements Serializable {
         this.subject = builder.subject;
         this.user = builder.user;
         this.status = builder.status;
-    }
-
-    public static Builder builder() {
-        return new Builder();
     }
 
     public static class Builder {
@@ -140,55 +149,50 @@ public class Ticket implements Serializable {
             this.id = id;
             return this;
         }
-
         public Builder version(Long version) {
             this.version = version;
             return this;
         }
-
         public Builder deleted(boolean deleted) {
             this.deleted = deleted;
             return this;
         }
-
         public Builder createdAt(LocalDateTime createdAt) {
             this.createdAt = createdAt;
             return this;
         }
-
         public Builder updatedAt(LocalDateTime updatedAt) {
             this.updatedAt = updatedAt;
             return this;
         }
-
         public Builder deletedAt(LocalDateTime deletedAt) {
             this.deletedAt = deletedAt;
             return this;
         }
-
         public Builder subject(String subject) {
             this.subject = subject;
             return this;
         }
-
         public Builder user(User user) {
             this.user = user;
             return this;
         }
-
         public Builder status(TicketStatus status) {
             this.status = status;
             return this;
         }
-
         public Ticket build() {
             return new Ticket(this);
         }
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     // ==================== Lifecycle Hooks ====================
 
-    public void onCreate() {
+    public void onCreated() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
         this.deleted = false;
@@ -199,11 +203,9 @@ public class Ticket implements Serializable {
             this.status = TicketStatus.OPEN;
         }
     }
-
-    public void onUpdate() {
+    public void onUpdated() {
         this.updatedAt = LocalDateTime.now();
     }
-
     public void onDeleted(){
         this.deleted = true;
         this.deletedAt = LocalDateTime.now();

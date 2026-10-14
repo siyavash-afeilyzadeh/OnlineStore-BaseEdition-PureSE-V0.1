@@ -28,7 +28,6 @@ public class TicketMessage implements Serializable {
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -36,7 +35,6 @@ public class TicketMessage implements Serializable {
     public Long getVersion() {
         return version;
     }
-
     public void setVersion(Long version) {
         this.version = version;
     }
@@ -44,7 +42,6 @@ public class TicketMessage implements Serializable {
     public boolean isDeleted() {
         return deleted;
     }
-
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
@@ -52,7 +49,6 @@ public class TicketMessage implements Serializable {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
-
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
@@ -60,7 +56,6 @@ public class TicketMessage implements Serializable {
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
-
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
@@ -68,7 +63,6 @@ public class TicketMessage implements Serializable {
     public LocalDateTime getDeletedAt() {
         return deletedAt;
     }
-
     public void setDeletedAt(LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
     }
@@ -76,7 +70,6 @@ public class TicketMessage implements Serializable {
     public Ticket getTicket() {
         return ticket;
     }
-
     public void setTicket(Ticket ticket) {
         this.ticket = ticket;
     }
@@ -84,7 +77,6 @@ public class TicketMessage implements Serializable {
     public User getSender() {
         return sender;
     }
-
     public void setSender(User sender) {
         this.sender = sender;
     }
@@ -92,15 +84,36 @@ public class TicketMessage implements Serializable {
     public String getContent() {
         return content;
     }
-
     public void setContent(String content) {
         this.content = content;
     }
 
-    // ==================== No-Arg Constructor ====================
+    // ==================== No-Arguments Constructor ====================
 
     public TicketMessage(){
 
+    }
+
+    // ==================== All-Arguments Constructor ====================
+
+    public TicketMessage(Long id,
+                         Long version,
+                         boolean deleted,
+                         LocalDateTime createdAt,
+                         LocalDateTime updatedAt,
+                         LocalDateTime deletedAt,
+                         Ticket ticket,
+                         User sender,
+                         String content) {
+        this.id = id;
+        this.version = version;
+        this.deleted = deleted;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.deletedAt = deletedAt;
+        this.ticket = ticket;
+        this.sender = sender;
+        this.content = content;
     }
 
     // ==================== Builder ====================
@@ -115,10 +128,6 @@ public class TicketMessage implements Serializable {
         this.ticket = builder.ticket;
         this.sender = builder.sender;
         this.content = builder.content;
-    }
-
-    public static Builder builder(){
-        return new Builder();
     }
 
     public static class Builder {
@@ -139,55 +148,50 @@ public class TicketMessage implements Serializable {
             this.id = id;
             return this;
         }
-
         public Builder version(Long version) {
             this.version = version;
             return this;
         }
-
         public Builder deleted(boolean deleted) {
             this.deleted = deleted;
             return this;
         }
-
         public Builder createdAt(LocalDateTime createdAt) {
             this.createdAt = createdAt;
             return this;
         }
-
         public Builder updatedAt(LocalDateTime updatedAt) {
             this.updatedAt = updatedAt;
             return this;
         }
-
         public Builder deletedAt(LocalDateTime deletedAt) {
             this.deletedAt = deletedAt;
             return this;
         }
-
         public Builder ticket(Ticket ticket) {
             this.ticket = ticket;
             return this;
         }
-
         public Builder sender(User sender) {
             this.sender = sender;
             return this;
         }
-
         public Builder content(String content) {
             this.content = content;
             return this;
         }
-
         public TicketMessage build() {
             return new TicketMessage(this);
         }
     }
 
+    public static Builder builder(){
+        return new Builder();
+    }
+
     // ==================== Lifecycle Hooks ====================
 
-    public void onCreate(){
+    public void onCreated(){
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
         this.deleted = false;
@@ -195,12 +199,10 @@ public class TicketMessage implements Serializable {
             this.version = 0L;
         }
     }
-
-    public void onUpdate() {
+    public void onUpdated() {
         this.updatedAt = LocalDateTime.now();
     }
-
-    public void onDelete() {
+    public void onDeleted() {
         this.deleted = true;
         this.deletedAt = LocalDateTime.now();
     }
