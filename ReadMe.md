@@ -1,4 +1,4 @@
-# 🛒 Parallel MFT Online Store
+# 🛒 OnlineStore `BaseEdition` (PureSE / V0.1)
 
 > A lightweight modular e-commerce backend built with Pure Java SE and explicit object-oriented design principles.
 
