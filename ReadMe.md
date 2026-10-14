@@ -1,34 +1,34 @@
 # 🛒 Parallel MFT Online Store
 
-> A lightweight enterprise e-commerce backend built with Pure Java SE and explicit object-oriented design.
+> A lightweight modular e-commerce backend built with Pure Java SE and explicit object-oriented design principles.
 
 ---
 
-## 🎯 هدف پروژه
-پیاده‌سازی یک فروشگاه اینترنتی ماژولار و مقیاس‌پذیر با معماری تمیز (Clean Architecture)، بدون وابستگی به جادوهای فریم‌ورک‌ها و به صورت کاملاً ساختاریافته (Pure Java SE).
+## 🎯 Project Objectives
+Implementing a scalable, clean-architecture e-commerce platform without framework magic, relying on robust object-oriented programming and explicit transaction management.
 
 ---
 
-## 🛠️ زیرساخت و فناوری‌ها
-- **زبان برنامه‌نویسی:** Java 17
-- **سیستم ساخت:** Apache Maven
-- **پایگاه داده:** PostgreSQL (JDBC خام)
-- **گروه پروژه (`GroupId`):** `com.black`
-- **شناسه اثر (`ArtifactId`):** `ParallelMftOnlineStoreEE`
+## 🛠️ Technology Stack & Infrastructure
+- **Programming Language:** Java 17
+- **Build Tool:** Apache Maven
+- **Database:** PostgreSQL (Raw JDBC)
+- **Group ID:** `com.black`
+- **Artifact ID:** `ParallelMftOnlineStoreEE`
 
 ---
 
-## 📂 ساختار ماژول‌ها و پیکربندی
-پروژه به صورت ماژول‌های کاملاً ایزوله و مستقل از هم طراحی شده است:
+## 📂 Project Structure & Packages
+The project is organized into isolated, domain-driven modules under `com.black.parallelmftonlinestoree`:
 ```text
 com.black.parallelmftonlinestoree
-├── 📁 attachments/    # مدیریت فایل‌ها و پیوست‌ها
-├── 📁 delivery/       # ارسال و لجستیک سفارشات
-├── 📁 financials/     # تراکنش‌های مالی و حسابداری
-├── 📁 inventories/    # انبارداری و مدیریت موجودی
-├── 📁 orders/         # ثبت و پیگیری سفارشات
-├── 📁 organization/   # ساختار سازمانی و نقش‌ها
-├── 📁 products/       # کاتالوگ محصولات و قیمت‌گذاری
-├── 📁 security/       # امنیت و رمزنگاری
-├── 📁 tickets/        # تیکت‌های پشتیبانی مشتریان
-└── 📁 users/          # مدیریت کاربران و احراز هویت
+├── 📁 attachments/    # File uploads and binary attachments handling
+├── 📁 delivery/       # Shipping, logistics, and dispatch tracking
+├── 📁 financials/     # Financial ledger and transaction processing
+├── 📁 inventories/    # Warehouse stock levels and inventory allocation
+├── 📁 orders/         # Customer orders and shopping cart lifecycle
+├── 📁 organization/   # Corporate departments, branches, and roles
+├── 📁 products/       # Product catalog, attributes, and pricing
+├── 📁 security/       # Encryption, hashing, and authorization helpers
+├── 📁 tickets/        # Customer support ticketing and messaging threads
+└── 📁 users/          # User identity management and authentication
