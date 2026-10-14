@@ -14,7 +14,7 @@ Implementing a scalable, clean-architecture e-commerce platform without framewor
 - **Build Tool:** Apache Maven
 - **Database:** PostgreSQL (Raw JDBC)
 - **Group ID:** `com.black`
-- **Artifact ID:** `ParallelMftOnlineStoreEE`
+- **Artifact ID:** `OnlineStoreSE`
 - **DataBase:** `Postgres`
 
 ---
