@@ -1,24 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
+<configuration scan="true" scanPeriod="30 seconds">
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} %-5level %-32logger{32} : %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <logger name="com.mftplus" level="DEBUG"/>
+    <!-- Application Logging -->
+    <logger name="com.black" level="DEBUG"/>
 
-    <logger name="org.hibernate.SQL" level="DEBUG"/>
-
-    <!-- TRACE prints every bound parameter value, passwords included; use it only for local debugging -->
-    <logger name="org.hibernate.orm.jdbc.bind" level="INFO"/>
-
+    <!-- Connection Pool Logging (if HikariCP is used) -->
     <logger name="com.zaxxer.hikari" level="INFO"/>
 
-    <logger name="org.hibernate.engine.transaction.internal.TransactionImpl" level="WARN"/>
-
+    <!-- Root Logger -->
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
     </root>
+
 </configuration>
