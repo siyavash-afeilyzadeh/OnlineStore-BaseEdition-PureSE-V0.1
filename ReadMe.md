@@ -15,6 +15,7 @@ Implementing a scalable, clean-architecture e-commerce platform without framewor
 - **Database:** PostgreSQL (Raw JDBC)
 - **Group ID:** `com.black`
 - **Artifact ID:** `ParallelMftOnlineStoreEE`
+- **DataBase:** `Postgres`
 
 ---
 
