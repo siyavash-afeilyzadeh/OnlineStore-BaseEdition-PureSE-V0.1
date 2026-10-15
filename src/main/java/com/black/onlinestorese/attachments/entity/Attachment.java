@@ -174,6 +174,7 @@ public class Attachment implements Serializable {
         this.fileSize = fileSize;
         this.storedName = storedName;
     }
+
     // ==================== Builder ====================
 
     private Attachment(Builder builder) {
