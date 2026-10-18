@@ -1,8 +1,5 @@
 package com.black.onlinestorese.financials.entity;
 
-import com.black.onlinestorese.delivery.entity.Delivery;
-import com.black.onlinestorese.delivery.entity.enums.DeliveryStatus;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
