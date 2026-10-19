@@ -186,6 +186,112 @@ public class Order implements Serializable {
         this.status = status;
     }
 
+    // ==================== Builder ====================
+
+    private Order(Builder builder) {
+        this.id = builder.id;
+        this.version = builder.version;
+        this.deleted = builder.deleted;
+        this.createdAt = builder.createdAt;
+        this.updatedAt = builder.updatedAt;
+        this.deletedAt = builder.deletedAt;
+        this.orderItems = builder.orderItems;
+        this.customer = builder.customer;
+        this.shippingMethod = builder.shippingMethod;
+        this.shippingStatus = builder.shippingStatus;
+        this.paymentId = builder.paymentId;
+        this.total = builder.total;
+        this.type = builder.type;
+        this.status = builder.status;
+    }
+
+    private static class Builder {
+        private Long id;
+        private Long version;
+        private boolean deleted;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+        private LocalDateTime deletedAt;
+        private List<OrderItem> orderItems;
+        private User customer;
+        private ShippingMethod shippingMethod;
+        private ShippingStatus shippingStatus;
+        private Payment paymentId;
+        private BigDecimal total;
+        private OrderType type;
+        private OrderStatus status;
+
+        public Builder() {
+        }
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+        public Builder version(Long version) {
+            this.version = version;
+            return this;
+        }
+        public Builder deleted(boolean deleted) {
+            this.deleted = deleted;
+            return this;
+        }
+        public Builder createdAt(LocalDateTime createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+        public Builder updatedAt(LocalDateTime updatedAt) {
+            this.updatedAt = updatedAt;
+            return this;
+        }
+        public Builder deletedAt(LocalDateTime deletedAt) {
+            this.deletedAt = deletedAt;
+            return this;
+        }
+        public Builder orderItems(List<OrderItem> orderItems) {
+            this.orderItems = orderItems;
+            return this;
+        }
+        public Builder customer(User customer) {
+            this.customer = customer;
+            return this;
+        }
+        public Builder shippingMethod(ShippingMethod shippingMethod) {
+            this.shippingMethod = shippingMethod;
+            return this;
+        }
+        public Builder shippingStatus(ShippingStatus shippingStatus) {
+            this.shippingStatus = shippingStatus;
+            return this;
+        }
+        public Builder paymentId(Payment paymentId) {
+            this.paymentId = paymentId;
+            return this;
+        }
+        public Builder total(BigDecimal total) {
+            this.total = total;
+            return this;
+        }
+        public Builder type(OrderType type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder status(OrderStatus status) {
+            this.status = status;
+            return this;
+        }
+
+        public Order build() {
+            return new Order(this);
+        }
+
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
     // ==================== Lifecycle Hooks ====================
 
     public void onCreated() {
