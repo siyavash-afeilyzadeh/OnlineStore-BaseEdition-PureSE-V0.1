@@ -1,4 +1,7 @@
 package com.black.onlinestorese.orders.entity.enums;
 
 public enum OrderType {
+    BUY,
+    SELL,
+    CART
 }
