@@ -217,6 +217,42 @@ public class TicketMessageRepository {
         }
     }
 
+    // ==================== Find By Ticket ====================
+
+    public List<TicketMessage> findByTicket(Long ticketId) {
+        String sql = "SELECT id, version, deleted, created_at, updated_at, deleted_at, ticket_id, sender_id, content " +
+                "FROM ticket_messages WHERE ticket_id = ? AND deleted = false ORDER BY id ASC";
+
+        List<TicketMessage> messages = new ArrayList<>();
+
+        try {
+            Connection connection = getConnection();
+            try {
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                try {
+                    preparedStatement.setLong(1, ticketId);
+
+                    ResultSet resultSet = preparedStatement.executeQuery();
+                    try {
+                        while (resultSet.next()) {
+                            messages.add(mapRowToTicketMessage(resultSet));
+                        }
+                    } finally {
+                        resultSet.close();
+                    }
+                } finally {
+                    preparedStatement.close();
+                }
+            } finally {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error in findByTicket(): " + e.getMessage(), e);
+        }
+
+        return messages;
+    }
+
     // ==================== Row Mappers ====================
 
     private TicketMessage mapRowToTicketMessage(ResultSet resultSet) throws SQLException {

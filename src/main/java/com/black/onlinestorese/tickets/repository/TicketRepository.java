@@ -217,7 +217,7 @@ public class TicketRepository {
 
     public List<Ticket> findByUser(Long userId) {
         String sql = "SELECT id, version, deleted, created_at, updated_at, deleted_at, subject, user_id, status " +
-                "FROM tickets WHERE user_id = ? AND deleted = false ORDER BY created_at DESC";
+                "FROM tickets WHERE user_id = ? AND deleted = false ORDER BY id ASC";
 
         List<Ticket> tickets = new ArrayList<>();
 
@@ -236,8 +236,6 @@ public class TicketRepository {
                     } finally {
                         resultSet.close();
                     }
-
-                    return tickets;
                 } finally {
                     preparedStatement.close();
                 }
@@ -245,8 +243,46 @@ public class TicketRepository {
                 connection.close();
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error in findAllByUserId(): " + e.getMessage(), e);
+            throw new RuntimeException("Database error in findByUser(): " + e.getMessage(), e);
         }
+
+        return tickets;
+    }
+
+    // ==================== Find By User Last Update ====================
+
+    public List<Ticket> findByUserLastUpdated(Long userId) {
+        String sql = "SELECT id, version, deleted, created_at, updated_at, deleted_at, subject, user_id, status " +
+                "FROM tickets WHERE user_id = ? AND deleted = false ORDER BY updated_at DESC";
+
+        List<Ticket> tickets = new ArrayList<>();
+
+        try {
+            Connection connection = getConnection();
+            try {
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                try {
+                    preparedStatement.setLong(1, userId);
+
+                    ResultSet resultSet = preparedStatement.executeQuery();
+                    try {
+                        while (resultSet.next()) {
+                            tickets.add(mapRowToTicket(resultSet));
+                        }
+                    } finally {
+                        resultSet.close();
+                    }
+                } finally {
+                    preparedStatement.close();
+                }
+            } finally {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error in findByUserLastUpdated(): " + e.getMessage(), e);
+        }
+
+        return tickets;
     }
 
     // ==================== Row Mappers ====================
