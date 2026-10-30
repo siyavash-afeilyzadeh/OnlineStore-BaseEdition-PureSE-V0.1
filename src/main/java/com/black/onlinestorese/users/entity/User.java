@@ -162,7 +162,7 @@ public class User implements Serializable {
         this.profile = builder.profile;
     }
 
-    private static class Builder {
+    public static class Builder {
         private Long id;
         private Long version;
         private boolean deleted;

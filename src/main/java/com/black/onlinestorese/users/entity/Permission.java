@@ -112,7 +112,7 @@ public class Permission implements Serializable {
         this.name = builder.name;
     }
 
-    private static class Builder {
+    public static class Builder {
         private Long id;
         private Long version;
         private boolean deleted;
