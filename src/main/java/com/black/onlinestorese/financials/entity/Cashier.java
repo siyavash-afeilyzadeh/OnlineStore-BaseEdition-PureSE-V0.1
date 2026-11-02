@@ -124,7 +124,7 @@ public class Cashier implements Serializable {
         this.employeeCode = builder.employeeCode;
     }
 
-    private static class Builder {
+    public static class Builder {
         private Long id;
         private Long version;
         private boolean deleted;

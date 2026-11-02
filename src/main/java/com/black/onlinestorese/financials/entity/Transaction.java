@@ -164,7 +164,7 @@ public class Transaction implements Serializable {
         this.cashier = builder.cashier;
     }
 
-    private static class Builder {
+    public static class Builder {
         private Long id;
         private Long version;
         private boolean deleted;

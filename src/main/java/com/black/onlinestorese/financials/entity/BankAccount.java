@@ -152,7 +152,7 @@ public class BankAccount implements Serializable {
         this.bank = builder.bank;
     }
 
-    private static class Builder {
+    public static class Builder {
         private Long id;
         private Long version;
         private boolean deleted;

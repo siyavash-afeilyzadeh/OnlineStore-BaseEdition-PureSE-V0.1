@@ -125,7 +125,7 @@ public class CardPayment implements Serializable {
         this.trackingCode = builder.trackingCode;
     }
 
-    private static class Builder {
+    public static class Builder {
         private Long id;
         private Long version;
         private boolean deleted;
