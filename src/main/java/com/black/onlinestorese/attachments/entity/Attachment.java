@@ -195,7 +195,7 @@ public class Attachment implements Serializable {
         this.storedName = builder.storedName;
     }
 
-    private static class Builder {
+    public static class Builder {
         private Long id;
         private Long version;
         private boolean deleted;
