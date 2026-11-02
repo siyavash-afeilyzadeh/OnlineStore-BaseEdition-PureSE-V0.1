@@ -11,7 +11,7 @@ public class RoleRepository {
 
     // ==================== Database Configuration ====================
 
-    private static final String DB_URL = "jdbc:postgres://localhost:5432/onlinestore_db";
+    private static final String DB_URL = "jdbc:postgresql://localhost:5432/onlinestore_db";
     private static final String DB_USER = "postgres";
     private static final String DB_PASS = "postgres123";
 
@@ -244,7 +244,7 @@ public class RoleRepository {
     // ==================== Helper Methods for Permissions Association ====================
     private Set<Permission> findPermissionsByRoleId(Connection connection, Long roleId) throws SQLException {
         Set<Permission> permissions = new HashSet<>();
-        String sql = "SELECT p.id, p.version, p.deleted, p.created_at, p.updated_at, p.deleted_at, p.name, p.description " +
+        String sql = "SELECT p.id, p.version, p.deleted, p.created_at, p.updated_at, p.deleted_at, p.name " +
                 "FROM permissions p " +
                 "JOIN role_permissions rp ON rp.permission_id = p.id " +
                 "WHERE rp.role_id = ? AND p.deleted = false";

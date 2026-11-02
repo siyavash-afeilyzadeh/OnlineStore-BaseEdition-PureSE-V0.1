@@ -14,7 +14,7 @@ public class ProfileRepository {
 
     // ==================== Database Configuration ====================
 
-    private static final String DB_URL = "jdbc:postgres://localhost:5432/onlinestore_db";
+    private static final String DB_URL = "jdbc:postgresql://localhost:5432/onlinestore_db";
     private static final String DB_USER = "postgres";
     private static final String DB_PASS = "postgres123";
 
