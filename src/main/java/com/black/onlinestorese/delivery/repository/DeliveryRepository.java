@@ -30,15 +30,8 @@ public class DeliveryRepository {
     // ==================== CRUD Operations ====================
     // ==================== Create/Save ====================
     public Delivery save(Delivery delivery) {
-        if (delivery.getId() == null) {
-            return insert(delivery);
-        } else {
-            return update(delivery);
-        }
-    }
-
-    private Delivery insert(Delivery delivery) {
         delivery.onCreated();
+
         String sql = "INSERT INTO deliveries (version, deleted, created_at, updated_at, deleted_at, " +
                 "address, status, tracking_number, send_date, receive_date, delivery_notes, courier_id) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -77,6 +70,7 @@ public class DeliveryRepository {
                         generatedKeys.close();
                     }
 
+                    return delivery;
                 } finally {
                     preparedStatement.close();
                 }
@@ -84,10 +78,8 @@ public class DeliveryRepository {
                 connection.close();
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error in insert(): " + e.getMessage(), e);
+            throw new RuntimeException("Database error in save(): " + e.getMessage(), e);
         }
-
-        return delivery;
     }
 
     // ==================== Read/Find By ID ====================

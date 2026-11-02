@@ -28,15 +28,8 @@ public class CourierRepository {
     // ==================== CRUD Operations ====================
     // ==================== Create/Save ====================
     public Courier save(Courier courier) {
-        if (courier.getId() == null) {
-            return insert(courier);
-        } else {
-            return update(courier);
-        }
-    }
-
-    private Courier insert(Courier courier) {
         courier.onCreated();
+
         String sql = "INSERT INTO couriers (version, deleted, created_at, updated_at, deleted_at, " +
                 "name, phone, email, vehicle_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -71,6 +64,7 @@ public class CourierRepository {
                         generatedKeys.close();
                     }
 
+                    return courier;
                 } finally {
                     preparedStatement.close();
                 }
@@ -78,10 +72,8 @@ public class CourierRepository {
                 connection.close();
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error in insert(): " + e.getMessage(), e);
+            throw new RuntimeException("Database error in save(): " + e.getMessage(), e);
         }
-
-        return courier;
     }
 
     // ==================== Read/Find By ID ====================
