@@ -29,15 +29,8 @@ public class AttachmentRepository {
     // ==================== CRUD Operations ====================
     // ==================== Create/Save ====================
     public Attachment save(Attachment attachment) {
-        if (attachment.getId() == null) {
-            return insert(attachment);
-        } else {
-            return update(attachment);
-        }
-    }
-
-    private Attachment insert(Attachment attachment) {
         attachment.onCreated();
+
         String sql = "INSERT INTO attachments (version, deleted, created_at, updated_at, deleted_at, " +
                 "owner_type, owner_id, title, file_name, description, keywords, content_type, file_size, stored_name) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -59,7 +52,7 @@ public class AttachmentRepository {
                     preparedStatement.setString(10, attachment.getDescription());
                     preparedStatement.setString(11, attachment.getKeywords());
                     preparedStatement.setString(12, attachment.getContentType());
-                    preparedStatement.setObject(13, attachment.getFileSize());
+                    preparedStatement.setLong(13, attachment.getFileSize() != null ? attachment.getFileSize() : 0L);
                     preparedStatement.setString(14, attachment.getStoredName());
 
                     int affectedRows = preparedStatement.executeUpdate();
@@ -78,6 +71,7 @@ public class AttachmentRepository {
                         generatedKeys.close();
                     }
 
+                    return attachment;
                 } finally {
                     preparedStatement.close();
                 }
@@ -85,10 +79,8 @@ public class AttachmentRepository {
                 connection.close();
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Database error in insert(): " + e.getMessage(), e);
+            throw new RuntimeException("Database error in save(): " + e.getMessage(), e);
         }
-
-        return attachment;
     }
 
     // ==================== Read/Find By ID ====================
