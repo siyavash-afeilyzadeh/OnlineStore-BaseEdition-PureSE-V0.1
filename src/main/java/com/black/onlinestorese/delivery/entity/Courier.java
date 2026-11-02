@@ -149,7 +149,7 @@ public class Courier implements Serializable {
         this.vehicleType = builder.vehicleType;
     }
 
-    private static class Builder {
+    public static class Builder {
         private Long id;
         private Long version;
         private boolean deleted;
