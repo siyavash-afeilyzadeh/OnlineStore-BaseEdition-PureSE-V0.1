@@ -240,6 +240,75 @@ public class RoleRepository {
             throw new RuntimeException("Database error in findById(): " + e.getMessage(), e);
         }
     }
+
+    // ==================== Helper Methods for Permissions Association ====================
+    private Set<Permission> findPermissionsByRoleId(Connection connection, Long roleId) throws SQLException {
+        Set<Permission> permissions = new HashSet<>();
+        String sql = "SELECT p.id, p.version, p.deleted, p.created_at, p.updated_at, p.deleted_at, p.name, p.description " +
+                "FROM permissions p " +
+                "JOIN role_permissions rp ON rp.permission_id = p.id " +
+                "WHERE rp.role_id = ? AND p.deleted = false";
+
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        try {
+            preparedStatement.setLong(1, roleId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            try {
+                while (resultSet.next()) {
+                    Timestamp createdAtTs = resultSet.getTimestamp("created_at");
+                    Timestamp updatedAtTs = resultSet.getTimestamp("updated_at");
+                    Timestamp deletedAtTs = resultSet.getTimestamp("deleted_at");
+
+                    Permission permission = Permission.builder()
+                            .id(resultSet.getLong("id"))
+                            .version(resultSet.getLong("version"))
+                            .deleted(resultSet.getBoolean("deleted"))
+                            .createdAt(createdAtTs != null ? createdAtTs.toLocalDateTime() : null)
+                            .updatedAt(updatedAtTs != null ? updatedAtTs.toLocalDateTime() : null)
+                            .deletedAt(deletedAtTs != null ? deletedAtTs.toLocalDateTime() : null)
+                            .name(resultSet.getString("name"))
+                            // Assuming permission has description or adjust based on Permission entity
+                            .build();
+                    permissions.add(permission);
+                }
+            } finally {
+                resultSet.close();
+            }
+        } finally {
+            preparedStatement.close();
+        }
+
+        return permissions;
+    }
+
+    private void saveRolePermissions(Connection connection, Long roleId, Set<Permission> permissions) throws SQLException {
+        String sql = "INSERT INTO role_permissions (role_id, permission_id) VALUES (?, ?)";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        try {
+            for (Permission permission : permissions) {
+                if (permission.getId() != null) {
+                    preparedStatement.setLong(1, roleId);
+                    preparedStatement.setLong(2, permission.getId());
+                    preparedStatement.addBatch();
+                }
+            }
+            preparedStatement.executeBatch();
+        } finally {
+            preparedStatement.close();
+        }
+    }
+
+    private void deleteRolePermissions(Connection connection, Long roleId) throws SQLException {
+        String sql = "DELETE FROM role_permissions WHERE role_id = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        try {
+            preparedStatement.setLong(1, roleId);
+            preparedStatement.executeUpdate();
+        } finally {
+            preparedStatement.close();
+        }
+    }
+
     // ==================== Row Mappers ====================
 
     private Role mapRowToRole(ResultSet resultSet) throws SQLException {
