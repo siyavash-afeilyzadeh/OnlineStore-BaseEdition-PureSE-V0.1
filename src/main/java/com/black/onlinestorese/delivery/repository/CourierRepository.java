@@ -13,11 +13,16 @@ public class CourierRepository {
     // ==================== Database Configuration ====================
     private static final String DB_URL = "jdbc:postgresql://localhost:5432/onlinestore_db";
     private static final String DB_USER = "postgres";
-    private static final String DB_PASSWORD = "postgres123";
+    private static final String DB_PASS = "postgres123";
 
     // ==================== Connection Management ====================
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new SQLException("PostgreSQL Driver not found in Classpath!", e);
+        }
+        return DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
     }
 
     // ==================== CRUD Operations ====================
