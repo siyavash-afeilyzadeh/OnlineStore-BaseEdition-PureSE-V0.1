@@ -33,32 +33,25 @@ public class CashPaymentRepository {
 
     public CashPayment save(CashPayment cashPayment) {
         cashPayment.onCreated();
-        String sql = "INSERT INTO cash_payments (cashier_id, version, deleted, created_at, updated_at, deleted_at) VALUES (?, ?, ?, ?, ?, ?)";
+
+        String sql = "INSERT INTO cash_payments (version, deleted, created_at, updated_at, deleted_at, cashier_id) " +
+                "VALUES (?, ?, ?, ?, ?, ?)";
 
         try {
             Connection connection = getConnection();
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
                 try {
+                    preparedStatement.setLong(1, cashPayment.getVersion() != null ? cashPayment.getVersion() : 0L);
+                    preparedStatement.setBoolean(2, cashPayment.isDeleted());
+                    preparedStatement.setTimestamp(3, cashPayment.getCreatedAt() != null ? Timestamp.valueOf(cashPayment.getCreatedAt()) : null);
+                    preparedStatement.setTimestamp(4, cashPayment.getUpdatedAt() != null ? Timestamp.valueOf(cashPayment.getUpdatedAt()) : null);
+                    preparedStatement.setTimestamp(5, cashPayment.getDeletedAt() != null ? Timestamp.valueOf(cashPayment.getDeletedAt()) : null);
+
                     if (cashPayment.getCashier() != null && cashPayment.getCashier().getId() != null) {
-                        preparedStatement.setLong(1, cashPayment.getCashier().getId());
+                        preparedStatement.setLong(6, cashPayment.getCashier().getId());
                     } else {
-                        preparedStatement.setNull(1, Types.BIGINT);
-                    }
-                    preparedStatement.setLong(2, cashPayment.getVersion() != null ? cashPayment.getVersion() : 0L);
-                    preparedStatement.setBoolean(3, cashPayment.isDeleted());
-                    preparedStatement.setTimestamp(4, cashPayment.getCreatedAt() != null ? Timestamp.valueOf(cashPayment.getCreatedAt()) : Timestamp.valueOf(LocalDateTime.now()));
-
-                    if (cashPayment.getUpdatedAt() != null) {
-                        preparedStatement.setTimestamp(5, Timestamp.valueOf(cashPayment.getUpdatedAt()));
-                    } else {
-                        preparedStatement.setNull(5, Types.TIMESTAMP);
-                    }
-
-                    if (cashPayment.getDeletedAt() != null) {
-                        preparedStatement.setTimestamp(6, Timestamp.valueOf(cashPayment.getDeletedAt()));
-                    } else {
-                        preparedStatement.setNull(6, Types.TIMESTAMP);
+                        preparedStatement.setNull(6, Types.BIGINT);
                     }
 
                     int affectedRows = preparedStatement.executeUpdate();
@@ -92,7 +85,8 @@ public class CashPaymentRepository {
     // ==================== Read/Find By ID ====================
 
     public Optional<CashPayment> findById(Long id) {
-        String sql = "SELECT id, cashier_id, version, deleted, created_at, updated_at, deleted_at FROM cash_payments WHERE id = ? AND deleted = false";
+        String sql = "SELECT id, version, deleted, created_at, updated_at, deleted_at, cashier_id " +
+                "FROM cash_payments WHERE id = ? AND deleted = false";
 
         try {
             Connection connection = getConnection();
@@ -124,7 +118,8 @@ public class CashPaymentRepository {
     // ==================== Read/Find All ====================
 
     public List<CashPayment> findAll() {
-        String sql = "SELECT id, cashier_id, version, deleted, created_at, updated_at, deleted_at FROM cash_payments WHERE deleted = false ORDER BY id ASC";
+        String sql = "SELECT id, version, deleted, created_at, updated_at, deleted_at, cashier_id " +
+                "FROM cash_payments WHERE deleted = false ORDER BY id ASC";
 
         List<CashPayment> cashPayments = new ArrayList<>();
 
@@ -157,30 +152,32 @@ public class CashPaymentRepository {
 
     public CashPayment update(CashPayment cashPayment) {
         cashPayment.onUpdated();
-        long nextVersion = (cashPayment.getVersion() != null ? cashPayment.getVersion() : 0L) + 1;
 
-        String sql = "UPDATE cash_payments SET cashier_id = ?, version = ?, updated_at = ? WHERE id = ? AND deleted = false";
+        String sql = "UPDATE cash_payments SET version = ?, updated_at = ?, cashier_id = ? " +
+                "WHERE id = ? AND deleted = false";
 
         try {
             Connection connection = getConnection();
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 try {
+                    preparedStatement.setLong(1, cashPayment.getVersion() != null ? cashPayment.getVersion() + 1 : 1L);
+                    preparedStatement.setTimestamp(2, cashPayment.getUpdatedAt() != null ? Timestamp.valueOf(cashPayment.getUpdatedAt()) : null);
+
                     if (cashPayment.getCashier() != null && cashPayment.getCashier().getId() != null) {
-                        preparedStatement.setLong(1, cashPayment.getCashier().getId());
+                        preparedStatement.setLong(3, cashPayment.getCashier().getId());
                     } else {
-                        preparedStatement.setNull(1, Types.BIGINT);
+                        preparedStatement.setNull(3, Types.BIGINT);
                     }
-                    preparedStatement.setLong(2, nextVersion);
-                    preparedStatement.setTimestamp(3, cashPayment.getUpdatedAt() != null ? Timestamp.valueOf(cashPayment.getUpdatedAt()) : Timestamp.valueOf(LocalDateTime.now()));
+
                     preparedStatement.setLong(4, cashPayment.getId());
 
                     int affectedRows = preparedStatement.executeUpdate();
                     if (affectedRows == 0) {
-                        throw new SQLException("Cash payment update failed, record not found or already deleted.");
+                        throw new SQLException("Cash payment update failed, record not found or marked as deleted.");
                     }
 
-                    cashPayment.setVersion(nextVersion);
+                    cashPayment.setVersion(cashPayment.getVersion() != null ? cashPayment.getVersion() + 1 : 1L);
                     return cashPayment;
                 } finally {
                     preparedStatement.close();
@@ -196,8 +193,8 @@ public class CashPaymentRepository {
     // ==================== Delete (Soft Delete) ====================
 
     public boolean softDelete(Long id) {
-        CashPayment temp = new CashPayment();
-        temp.onDeleted();
+        CashPayment cashPayment = new CashPayment();
+        cashPayment.onDeleted();
 
         String sql = "UPDATE cash_payments SET deleted = true, deleted_at = ? WHERE id = ? AND deleted = false";
 
@@ -206,7 +203,7 @@ public class CashPaymentRepository {
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
                 try {
-                    preparedStatement.setTimestamp(1, temp.getDeletedAt() != null ? Timestamp.valueOf(temp.getDeletedAt()) : Timestamp.valueOf(LocalDateTime.now()));
+                    preparedStatement.setTimestamp(1, cashPayment.getDeletedAt() != null ? Timestamp.valueOf(cashPayment.getDeletedAt()) : null);
                     preparedStatement.setLong(2, id);
 
                     int affectedRows = preparedStatement.executeUpdate();
@@ -226,24 +223,20 @@ public class CashPaymentRepository {
 
     private CashPayment mapRowToCashPayment(ResultSet resultSet) throws SQLException {
         Long id = resultSet.getLong("id");
-        Long cashierId = resultSet.getLong("cashier_id");
         Long version = resultSet.getLong("version");
         boolean deleted = resultSet.getBoolean("deleted");
 
-        Timestamp createdAtTs = resultSet.getTimestamp("created_at");
-        LocalDateTime createdAt = createdAtTs != null ? createdAtTs.toLocalDateTime() : null;
+        Timestamp createdAtTimestamp = resultSet.getTimestamp("created_at");
+        LocalDateTime createdAt = createdAtTimestamp != null ? createdAtTimestamp.toLocalDateTime() : null;
 
-        Timestamp updatedAtTs = resultSet.getTimestamp("updated_at");
-        LocalDateTime updatedAt = updatedAtTs != null ? updatedAtTs.toLocalDateTime() : null;
+        Timestamp updatedAtTimestamp = resultSet.getTimestamp("updated_at");
+        LocalDateTime updatedAt = updatedAtTimestamp != null ? updatedAtTimestamp.toLocalDateTime() : null;
 
-        Timestamp deletedAtTs = resultSet.getTimestamp("deleted_at");
-        LocalDateTime deletedAt = deletedAtTs != null ? deletedAtTs.toLocalDateTime() : null;
+        Timestamp deletedAtTimestamp = resultSet.getTimestamp("deleted_at");
+        LocalDateTime deletedAt = deletedAtTimestamp != null ? deletedAtTimestamp.toLocalDateTime() : null;
 
-        Cashier cashier = null;
-        if (cashierId != 0 && !resultSet.wasNull()) {
-            cashier = new Cashier();
-            cashier.setId(cashierId);
-        }
+        Long cashierId = resultSet.getObject("cashier_id", Long.class);
+        Cashier cashier = cashierId != null ? Cashier.builder().id(cashierId).build() : null;
 
         return CashPayment.builder()
                 .id(id)
