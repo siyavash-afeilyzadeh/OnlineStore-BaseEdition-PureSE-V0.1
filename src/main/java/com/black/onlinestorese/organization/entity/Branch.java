@@ -212,7 +212,7 @@ public class Branch implements Serializable {
         this.address = builder.address;
     }
 
-    private static class Builder {
+    public static class Builder {
         private Long id;
         private Long version;
         private boolean deleted;
