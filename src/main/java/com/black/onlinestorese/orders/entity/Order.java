@@ -205,7 +205,7 @@ public class Order implements Serializable {
         this.status = builder.status;
     }
 
-    private static class Builder {
+    public static class Builder {
         private Long id;
         private Long version;
         private boolean deleted;
