@@ -149,7 +149,7 @@ public class ProductCategory implements Serializable {
         this.parentCategory = builder.parentCategory;
     }
 
-    private static class Builder {
+    public static class Builder {
         private Long id;
         private Long version;
         private boolean deleted;
